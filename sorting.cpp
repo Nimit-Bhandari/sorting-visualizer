@@ -40,6 +40,69 @@ void bubbleSort(int arr[], int n) {
     }
 }
 
+void insertionSort(int arr[], int n) {
+    for (int i = 1; i < n; i++) {
+        int key = arr[i];
+        int j = i - 1;
+
+        // Move elements of arr[0..i-1] that are greater than key
+        // to one position ahead of their current position
+        while (j >= 0 && arr[j] > key) {
+            arr[j + 1] = arr[j];
+            j = j - 1;
+            
+        }
+        arr[j + 1] = key;
+        wp(arr, n);
+    }
+}
+
+void selectionSort(int arr[], int n) {
+    for (int i = 0; i < n - 1; i++) {
+        int minIndex = i;
+        
+        // Find the minimum element in the unsorted part of the array
+        for (int j = i + 1; j < n; j++) {
+            if (arr[j] < arr[minIndex]) {
+                minIndex = j;
+            }
+        }
+        
+        // Swap the found minimum element with the first element
+        swap(arr[minIndex], arr[i]);
+        wp(arr, n);
+
+    }
+}
+
+
+int partition(int arr[], int low, int high,int n) {
+    int pivot = arr[high];  // Pivot element
+    int i = (low - 1);  // Index of smaller element
+
+    for (int j = low; j <= high - 1; j++) {
+        // If the current element is smaller than or equal to the pivot
+        if (arr[j] <= pivot) {
+            i++;
+            swap(arr[i], arr[j]);
+            wp(arr, n);
+        }
+    }
+    swap(arr[i + 1], arr[high]);
+    wp(arr, n);
+    return (i + 1); 
+}
+void quickSort(int arr[], int low, int high,int n) {
+    if (low < high) {
+        int pi = partition(arr, low, high,n);
+
+        // Recursively sort the elements before and after partition
+        quickSort(arr, low, pi - 1,n);
+        quickSort(arr, pi + 1, high,n);
+    }
+}
+
+
 int main() {
     hpipe = CreateNamedPipe(
         "\\\\.\\pipe\\MyPipe",       
@@ -66,17 +129,17 @@ int main() {
 
     cout << "Client connected!" << endl;
 
-    int arr[] = {5, 3, 8, 1, 2};
+    int arr[6]={2,5,1,4};
     int n = sizeof(arr) / sizeof(arr[0]);
 
-    bubbleSort(arr, n);  // Sort the array and write to the pipe
-
+    //bubbleSort(arr, n);  // Sort the array and write to the pipe
+    quickSort(arr,0,n-1,n);
     // Keep the pipe open for the client to read, do not close prematurely
     cout << "Data written, pipe open. Waiting for client to finish..." << endl;
 
     // Close the pipe after communication is finished
     CloseHandle(hpipe);
-    cout<<"closd";
+    cout<<"Closed";
 
     return 0;
 }
