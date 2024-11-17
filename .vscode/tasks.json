@@ -1,0 +1,22 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build C++",
+            "type": "shell",
+            "command": "g++",
+            "args": [
+                "-g",
+                "sorting.cpp",
+                "-o",
+                "pipe_server.exe"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": ["$gcc"],
+            "detail": "Generated task to compile C++"
+        }
+    ]
+}
