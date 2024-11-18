@@ -146,7 +146,7 @@ int main() {
     switch (ch)
     {
     case 1:
-        quickSort(v,v[0],v[n-1],n);
+        quickSort(v,0,n-1,n);//here indices will be passed not the element
         break;
     case 2:
         bubbleSort(v,n);
