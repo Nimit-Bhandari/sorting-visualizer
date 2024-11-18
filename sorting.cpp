@@ -1,37 +1,38 @@
 #include <iostream>
 #include <windows.h>
+#include<vector>
 
 using namespace std;
 
 HANDLE hpipe;
-void wp(int *ar, int si) {
+void wp( vector<int>& data ) {
     DWORD bwt;
 
     // Step 1: Send the size of the array
-    int array_size = si;
-    if (!WriteFile(hpipe, &array_size, sizeof(int), &bwt, NULL)) {
-        cerr << "Failed to write array size! Error: " << GetLastError() << endl;
-        return;
+    int size = data.size();
+        if (!WriteFile(hpipe, &size, sizeof(int), &bwt, NULL)) {
+            cerr << "Failed to write array size! Error: " << GetLastError() << endl;
+            return; 
     }
-    cout << "Wrote array size (" << array_size << ") to the pipe." << endl;
+    cout << "Wrote array size (" <<size<< ") to the pipe." << endl;
 
     // Step 2: Send the array data
-    DWORD btw = si * sizeof(int);
-    if (!WriteFile(hpipe, ar, btw, &bwt, NULL)) {
+    DWORD btw = size* sizeof(int);
+    if (!WriteFile(hpipe, data.data(), btw, &bwt, NULL)) {
         cerr << "Failed to write array data! Error: " << GetLastError() << endl;
     } else {
         cout << "Wrote " << bwt << " bytes of array data to the pipe." << endl;
     }
 }
 
-void bubbleSort(int arr[], int n) {
+void bubbleSort(vector<int>& arr, int n) {
     for (int i = 0; i < n-1; i++) {
         bool swapped = false;
         for (int j = 0; j < n-i-1; j++) {
             if (arr[j] > arr[j+1]) {
                 swap(arr[j], arr[j+1]);
                 swapped = true;
-                wp(arr, n);  // Write to pipe after swap
+                wp(arr);  // Write to pipe after swap
             }
         }
         if (!swapped) {
@@ -40,7 +41,7 @@ void bubbleSort(int arr[], int n) {
     }
 }
 
-void insertionSort(int arr[], int n) {
+void insertionSort(vector<int>& arr, int n) {
     for (int i = 1; i < n; i++) {
         int key = arr[i];
         int j = i - 1;
@@ -53,11 +54,11 @@ void insertionSort(int arr[], int n) {
             
         }
         arr[j + 1] = key;
-        wp(arr, n);
+        wp(arr);
     }
 }
 
-void selectionSort(int arr[], int n) {
+void selectionSort(vector<int>& arr, int n) {
     for (int i = 0; i < n - 1; i++) {
         int minIndex = i;
         
@@ -70,13 +71,13 @@ void selectionSort(int arr[], int n) {
         
         // Swap the found minimum element with the first element
         swap(arr[minIndex], arr[i]);
-        wp(arr, n);
+        wp(arr);
 
     }
 }
 
 
-int partition(int arr[], int low, int high,int n) {
+int partition(vector<int>& arr, int low, int high,int n) {
     int pivot = arr[high];  // Pivot element
     int i = (low - 1);  // Index of smaller element
 
@@ -85,14 +86,14 @@ int partition(int arr[], int low, int high,int n) {
         if (arr[j] <= pivot) {
             i++;
             swap(arr[i], arr[j]);
-            wp(arr, n);
+            wp(arr);
         }
     }
     swap(arr[i + 1], arr[high]);
-    wp(arr, n);
+    wp(arr);
     return (i + 1); 
 }
-void quickSort(int arr[], int low, int high,int n) {
+void quickSort(vector<int>& arr, int low, int high,int n) {
     if (low < high) {
         int pi = partition(arr, low, high,n);
 
@@ -101,7 +102,6 @@ void quickSort(int arr[], int low, int high,int n) {
         quickSort(arr, pi + 1, high,n);
     }
 }
-
 
 int main() {
     hpipe = CreateNamedPipe(
@@ -129,11 +129,53 @@ int main() {
 
     cout << "Client connected!" << endl;
 
-    int arr[6]={2,5,1,4};
-    int n = sizeof(arr) / sizeof(arr[0]);
+    vector<int> v;
+    int n,no=0;
+    cout<<"Enter how many numbers of array you want"<<endl;
+    cin>>n;
+    for(int i=0;i<n;i++)
+    {   cout<<"Enter the "<<i+1<<" number"<<endl;
+        
+        cin>>no;
+        v.push_back(no);
+    }
+    int ch;
+    cout<<"enter 1 for qs,2 for bs,3 for is,4 for ss"<<endl;
+    cin>>ch;
+    wp(v);
+    switch (ch)
+    {
+    case 1:
+        quickSort(v,v[0],v[n-1],n);
+        break;
+    case 2:
+        bubbleSort(v,n);
+        break;
+    case 3:
+        insertionSort(v,n);
+        break;
+    case 4:
+        selectionSort(v,n);
+        break;
+    default:
+        cout<<"Enter a valid choice";
+        break;
+    }
 
-    //bubbleSort(arr, n);  // Sort the array and write to the pipe
-    quickSort(arr,0,n-1,n);
+    //wp(v);
+
+   // bubbleSort(v, n);  // Sort the array and write to the pipe
+    //quickSort(arr,0,n-1,n);
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     // Keep the pipe open for the client to read, do not close prematurely
     cout << "Data written, pipe open. Waiting for client to finish..." << endl;
 
