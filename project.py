@@ -19,23 +19,33 @@ def initialize_plot():
     """
     Initialize the plot with default settings.
     """
-    ax.set_ylim(0, 10)  # Set default y-axis range
+    ax.set_ylim(0, 100)  # Start with a reasonable default range
     ax.set_title("Real-Time Bar Chart")
     ax.set_xlabel("Index")
     ax.set_ylabel("Value")
     return bars
-
 def update_plot(frame):
     """
     Update the plot for each frame in the animation.
     """
     global latest_data
     if latest_data:
-        # Clear the axis and redraw bars
-        ax.clear()
+        ax.clear()  # Clear previous plot
+
+        # Draw new bars
         ax.bar(range(len(latest_data)), latest_data, align='center')
-        ax.set_ylim(0, max(latest_data) + 10)  # Adjust y-axis range
+
+        # Dynamically set the y-axis but cap it at a reasonable value
+        max_val = max(latest_data)
+        min_val = min(latest_data)
+
+        # Ensure a visible lower bound and cap extreme upper bounds
+        y_min = 0  # Fixed lower limit
+        y_max = max(max_val + 10, 100)  # Ensure at least 100 or 10 more than max_val
+        ax.set_ylim(y_min, y_max)
+
         ax.set_title(f"Current Array: {latest_data}")
+
 
 # Wait for the pipe to be available
 while True:
