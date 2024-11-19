@@ -23,6 +23,8 @@ void wp( vector<int>& data ) {
     } else {
         cout << "Wrote " << bwt << " bytes of array data to the pipe." << endl;
     }
+    cout<<"delay";
+    Sleep(2000);
 }
 
 void bubbleSort(vector<int>& arr, int n) {
