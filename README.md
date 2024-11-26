@@ -28,9 +28,7 @@ To install the necessary Python libraries, run:
 
 ```bash
 pip install pywin32 matplotlib
-
-
-
+```
 ## How It Works
 
 - **C++ Code**: The C++ code implements the sorting algorithms (e.g., Bubble Sort, Quick Sort) and generates data about each sorting step.
