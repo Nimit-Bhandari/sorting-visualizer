@@ -307,15 +307,7 @@ switch (ch) {
 
    // bubbleSort(v, n);  // Sort the array and write to the pipe
     //quickSort(arr,0,n-1,n);
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
     
     // Keep the pipe open for the client to read, do not close prematurely
     //cout << "Data written, pipe open. Waiting for client to finish..." << endl;
