@@ -1,3 +1,6 @@
+![Demo Clip](vids/Untitled%20video%20-%20Made%20with%20Clipchamp.gif)
+
+
 # Sorting Algorithm Visualizer
 
 This project provides an interactive tool to visualize sorting algorithms like **Bubble Sort**, **Quick Sort**, **Merge Sort**, and **Insertion Sort**. Built using **C++** and **Python**, it allows users to understand the step-by-step process of sorting algorithms with real-time animations. The system uses **named pipes** for communication between the C++ backend and Python frontend, ensuring efficient data transfer between the modules.
